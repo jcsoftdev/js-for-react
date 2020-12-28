@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Styled Components</title>
+</head>
+
+<body>
+
+    <div id="container"></div>
+    <script>
+
+        function component(strings, ...dynamicValues) {
+            return function (props) {
+                let newContent = strings.slice()
+                console.log(newContent)
+
+                dynamicValues.forEach((e, i) => {
+                    newContent[i] += props[e]
+                })
+                return newContent.join('')
+            }
+        }
+
+
+        const props = {
+            message: 'Hola que tal',
+            name: 'Juan Carlos'
+        }
+
+
+
+        function createTemplateStyled(params = []) {
+            let styled = {}
+            params.forEach((e, i) => {
+                styled[`${e}`] = function (styles) {
+                    return function (text) {
+                        const content = text ? text : ''
+                        return `<${e} style="${styles}">${content}</${e}>`
+                    }
+                }
+            })
+            return styled
+        }
+        const elements = ['h1', 'h2', 'h3', 'div']
+        const styled = createTemplateStyled(elements)
+
+
+        const TitleStyled = styled.h1`
+            color: red;
+            font-family: system-ui;
+            font-size: 3rem;
+
+        `
+
+        const SubTitleStyled = styled.h2`
+            color: #aaf13a;
+            font-family: system-ui;
+            font-size: 2rem;
+        `
+
+        const user = component`<marquee> ${'message'} ${'name'} </marquee> `(props)
+
+        const render = (component, container) => {
+            container.innerHTML = component
+        }
+
+        // render(TitleStyled(user), window.container)
+        render(SubTitleStyled(user), window.container)
+    </script>
+</body>
+
+</html>
